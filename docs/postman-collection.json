@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "ff83b5c4-1ed7-46f9-b667-f468c75c5334",
+		"name": "Posts CRUD API [study]",
+		"description": "Collection for testing Posts CRUD Backend API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15102598"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users?page=1&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Posts By User ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/{{user_id}}/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Users related requests"
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 201) {",
+							"    const response = pm.response.json();",
+							"    pm.collectionVariables.set('post_id', response.data._id);",
+							"    pm.collectionVariables.set('user_id', response.data.author_id);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Another post for user integration test\",\n  \"content\": \"This is the first post after user integration. It contains detailed information about the topic and demonstrates the CRUD functionality. Finally it test author integration flow.\",\n  \"author_id\": \"507f1f77bcf86cd799439012\",\n  \"tags\": [\"nodejs\", \"express\", \"mongodb\"],\n  \"status\": \"draft\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Posts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts?page=1&limit=10",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts With Authors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/withauthors?page=1&limit=10",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"withauthors"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Post",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Post",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Updated Post Title\",\n  \"content\": \"This is the first updated content of the post with more detailed information.\",\n  \"status\": \"published\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish Post",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post_id}}/publish",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}",
+						"publish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Published Posts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/published?page=1&limit=5",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"published"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "post_id",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
