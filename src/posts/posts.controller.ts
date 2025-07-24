@@ -43,6 +43,26 @@ export class PostsController {
     };
   }
 
+  @Get('published')
+  async findPublished(
+    @Query('page') page = 1,
+    @Query('limit') limit = 5,
+  ): Promise<{ success: boolean; data: PostModel[]; pagination: any }> {
+    const { data, total } = await this.postsService.findPublished(page, limit);
+    const pages = Math.ceil(total / limit);
+
+    return {
+      success: true,
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages,
+      },
+    };
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string): Promise<{
@@ -146,26 +166,6 @@ export class PostsController {
     return {
       success: true,
       message: 'Post deleted successfully',
-    };
-  }
-
-  @Get('published')
-  async findPublished(
-    @Query('page') page = 1,
-    @Query('limit') limit = 5,
-  ): Promise<{ success: boolean; data: PostModel[]; pagination: any }> {
-    const { data, total } = await this.postsService.findPublished(page, limit);
-    const pages = Math.ceil(total / limit);
-
-    return {
-      success: true,
-      data,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages,
-      },
     };
   }
 
