@@ -63,6 +63,33 @@ export class PostsController {
     };
   }
 
+  @Get('with-authors')
+  async findWithAuthors(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('status') status = '',
+    @Query('author_id') author_id = undefined,
+  ): Promise<{ success: boolean; data: PostModel[]; pagination: any }> {
+    const { data, total } = await this.postsService.findWithAuthors(
+      page,
+      limit,
+      status,
+      author_id,
+    );
+    const pages = Math.ceil(total / limit);
+
+    return {
+      success: true,
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages,
+      },
+    };
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string): Promise<{

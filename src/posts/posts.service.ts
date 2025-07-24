@@ -58,6 +58,32 @@ export class PostsService {
     return { data, total };
   }
 
+  async findWithAuthors(
+    page = 1,
+    limit = 5,
+    status?: string,
+    author_id?: string,
+  ): Promise<{ data: Post[]; total: number }> {
+    const filter: Record<string, any> = {};
+    if (status) filter.status = status;
+    if (author_id) {
+      const { Types } = await import('mongoose');
+      filter.author_id = new Types.ObjectId(author_id);
+    }
+
+    const query = this.postModel
+      .find(filter)
+      .populate('author_id', 'username email')
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const [data, total] = await Promise.all([
+      query.exec(),
+      this.postModel.countDocuments(filter).exec(),
+    ]);
+    return { data, total };
+  }
+
   async findByAuthor(authorId: string): Promise<Post[]> {
     return this.postModel.find({ author_id: authorId }).exec();
   }
